@@ -52,7 +52,7 @@ def call_sling_api(endpoint, payload):
 def set_connection(**kwargs):
     conn_config = kwargs['conn_config']
     payload = {{
-        "name": conn_config['conn'],
+        "conn": conn_config['conn'],
         "details": conn_config['details']
     }}
     return call_sling_api("/set_connection", payload)
@@ -69,10 +69,17 @@ def register_job(**kwargs):
         }},
         "mode": config.get('mode', 'full-refresh')
     }}
+    if 'source_options' in config:
+        payload['source_options'] = config['source_options']
+    if 'target_options' in config:
+        payload['target_options'] = config['target_options']
     return call_sling_api("/register", payload)
 
 def run_job(**kwargs):
-    payload = {{"stream": config['source']['stream']}}
+    payload = {{
+        "stream": config['source']['stream'],
+        "use_custom_run": config.get('use_custom_run', False)
+    }}
     return call_sling_api("/run", payload)
 
 with dag:
