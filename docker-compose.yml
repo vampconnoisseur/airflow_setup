@@ -216,16 +216,6 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
-  flask-app:
-    build:
-      context: .
-    ports:
-      - "5001:5001"
-    restart: always
-    depends_on:
-      postgres:
-        condition: service_healthy
-
+        
 volumes:
   postgres-db-volume:
